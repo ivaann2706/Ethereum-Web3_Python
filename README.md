@@ -146,6 +146,7 @@ El código anterior se puede resumir en:
 - Instancia del contrato
 - Despliegue del contrato
 
+# Interacción con el contrato
 Una vez que el contrato se ha desplegado en la red, obtenemos la dirección del contrato. Esta dirección la necesitaremos para interactuar con él.
 
 Con el siguiente script se pueden realizar llamadas al contrato.
