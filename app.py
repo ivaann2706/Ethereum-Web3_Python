@@ -2,21 +2,22 @@ import json
 from web3 import Web3
 
 url = "http://127.0.0.1:7545"
-web3 = Web3(Web3.HTTPProvider(url))
+w3 = Web3(Web3.HTTPProvider(url))
 
-abi = [{"inputs":[{"internalType":"string","name":"_saludo","type":"string"}],"name":"modificarSaludo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"saludar","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"saludo","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"stateMutability":"nonpayable","type":"constructor"}]
+abi = [{"inputs": [{"internalType": "string", "name": "_firstName", "type": "string"}, {"internalType": "string", "name": "_lastName", "type": "string"}], "name": "addPerson", "outputs": [], "stateMutability": "nonpayable", "type": "function"}, {"inputs": [], "name": "getPeopleCount", "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}], "stateMutability": "view", "type": "function"}, {"inputs": [{"internalType": "uint256", "name": "index", "type": "uint256"}], "name": "getPerson", "outputs": [{"internalType": "string", "name": "", "type": "string"}, {"internalType": "string", "name": "", "type": "string"}], "stateMutability": "view", "type": "function"}, {"inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}], "name": "people", "outputs": [{"internalType": "string", "name": "_firstName", "type": "string"}, {"internalType": "string", "name": "_lastName", "type": "string"}], "stateMutability": "view", "type": "function"}]
 
-contract = web3.eth.contract(address="0x3e0385258Cd7F07C69308EEd1E0DE9dd84214F4B", abi=abi)
+contractDeployed = w3.eth.contract(address="0xd4BD80FF53ac800266a4CCabD0C3720e82f50991", abi=abi)
 
-saludo = contract.functions.saludar().call()
-print(saludo)
+w3.eth.defaultAccount = w3.eth.accounts[0]
 
-web3.eth.defaultAccount = "0x78784cC124Dc8c855e68D88F1F65b28C4A2cF839"
+tx_hash = contractDeployed.functions.addPerson("ivan","alba").transact()
+tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
 
-tx_hash = contract.functions.modificarSaludo("hola").transact()
-web3.eth.waitForTransactionReceipt(tx_hash)
+tx_hash = contractDeployed.functions.addPerson("jose","gomez").transact()
+tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
 
-#contract.functions.modificarSaludo("adios").transact({'from': '0x78784cC124Dc8c855e68D88F1F65b28C4A2cF839'})
+peopleCount = contractDeployed.functions.getPeopleCount().call()
+print(peopleCount)
 
-saludo = contract.functions.saludar().call()
-print(saludo)
+person = contractDeployed.functions.getPerson(0).call()
+print(person)
